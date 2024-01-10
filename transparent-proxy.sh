@@ -1,6 +1,6 @@
 #!/bin/bash
 echo "Lütfen bekleyin..."  | lolcat
-#figlet "Sumbission of God"
+#figlet "Sumbission to God"
 sudo killall redsocks > /dev/null 2>&1
 sudo rm -rf iptables1.sh redsocks/iptables1.sh > /dev/null 2>&1
 chmod +x ./*
