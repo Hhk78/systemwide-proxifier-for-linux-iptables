@@ -1,5 +1,5 @@
 # systemwide-proxifier-for-linux
-Bir proxy sunucusunu sistem geneli çalıştırmaya yarar. iptables ve redoscks kullanır.
+Bir proxy sunucusunu sistem geneli çalıştırmaya yarar. iptables ve redoscks kullanır. Bash betiğini root olarak çalıştırın.
 
 # Feragatnâme
 Bu bir yardımcı betiktir içerdiği hiçbir program tarafımca oluşturulmamıştır ve üretilmemiştir.
