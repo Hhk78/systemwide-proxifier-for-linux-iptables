@@ -1,19 +1,21 @@
 #!/bin/bash
+echo "Lütfen bekleyin..."  | lolcat
+#figlet "Sumbission of God"
 sudo killall redsocks > /dev/null 2>&1
 sudo rm -rf iptables1.sh redsocks/iptables1.sh > /dev/null 2>&1
 chmod +x ./*
 # Sistem kontrolü
 if [ -f "/etc/arch-release" ]; then
-    pacman -S libevent iptables --noconfirm
+    pacman -S libevent iptables figlet --noconfirm
 elif [ -f "/etc/debian_version" ] || [ -f "/etc/lsb-release" ]; then
-    apt-get install libevent-dev iptables --yes
+    apt-get install libevent-dev iptables figlet --yes
 elif [ -f "/etc/fedora-release" ]; then
-    dnf install libevent-devel iptables --assumeyes
+    dnf install libevent-devel iptables figlet --assumeyes
 else
     echo "Desteklenmeyen bir sistem."
     exit 1
 fi
-
+figlet "Sumbission of God" | lolcat
 # Git deposunu klonla
 git clone https://github.com/darkk/redsocks
 cd redsocks
@@ -22,14 +24,14 @@ cd redsocks
 make -j4
 
 # redsocks dosyasını /bin dizinine kopyala
-sudo cp redsocks /bin/
+sudo cp redsocks /bin/ 
 
 # Kullanıcıdan proxy bilgilerini al
-read -p "Proxy IP: " proxy_ip
-read -p "Proxy Port: " proxy_port
-read -p "Proxy Type: " proxy_type
-read -p "Proxy User: " proxy_user
-read -p "Proxy Password: " proxy_passwd
+read -p "Proxy IP adresini giriniz: " proxy_ip
+read -p "Proxy Portunu giriniz: " proxy_port
+read -p "Proxy Tipini giriniz (socks5, socks4 veya http): " proxy_type
+read -p "Proxy Kullanıcı Adını giriniz (isteğe bağlı): " proxy_user
+read -p "Proxy Şifresini giriniz (isteğe bağlı ve socks4 için şifre girilmez): " proxy_passwd
 
 # redsocks.conf dosyasını oluştur
 cat <<EOF > redsocks.conf
@@ -61,11 +63,11 @@ EOF
 redsocks -c ./redsocks.conf
 
 # Kullanıcıdan noproxy bilgisini al
-read -p "NoProxy IP: " noproxy
+read -p "NoProxy IP (proxy sunucusunun ip adresini tekrardan girin): " noproxy
 export add_noproxy=e
 if [ "$add_noproxy" == "E" ] || [ "$add_noproxy" == "e" ]; then
-    read -p "NoProxy1 IP: " noproxy1
-    read -p "NoProxy2 IP: " noproxy2
+    read -p "Bir diğer NoProxy1 IP (yeni bir ip girmeyecekseniz proxy sunucusunun ip adresini girin! sakın boş bırakmayın!): " noproxy1
+    read -p "Bir diğer NoProxy2 IP (yeni bir ip girmeyecekseniz proxy sunucusunun ip adresini girin! sakın boş bırakmayın!): " noproxy2
 fi
 
 # iptables1.sh dosyasını oluştur
@@ -102,4 +104,4 @@ sudo cp ./redsocks/iptables1.sh .
 sudo ./iptables1.sh > /dev/null 2>&1
 # Kullanıcıya bilgi ver
 sudo ./iptables1.sh
-echo "Redsocks ve iptables kurulumu tamamlandı. NoProxy IP adreslerini iptables1.sh dosyasına ekleyerek kullanabilirsiniz."
+echo "Redsocks ve iptables kurulumu tamamlandı. NoProxy IP adreslerini iptables1.sh dosyasına ekleyerek kullanabilirsiniz."  | lolcat
