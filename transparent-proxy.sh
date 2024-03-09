@@ -29,7 +29,7 @@ sudo cp redsocks /bin/
 # Kullanıcıdan proxy bilgilerini al
 read -p "Proxy IP adresini giriniz: " proxy_ip
 read -p "Proxy Portunu giriniz: " proxy_port
-read -p "Proxy Tipini giriniz (socks5, socks4 veya http): " proxy_type
+read -p "Proxy Tipini giriniz (socks4, socks5, http-connect, http-relay: " proxy_type
 read -p "Proxy Kullanıcı Adını giriniz (isteğe bağlı): " proxy_user
 read -p "Proxy Şifresini giriniz (isteğe bağlı ve socks4 için şifre girilmez): " proxy_passwd
 
