@@ -1,0 +1,30 @@
+Installing Iptables
+Already installed in Linux. Nothing to do here my good man.
+
+Iptables configuration
+Am going to create a .sh file to facilitate the process. Notice that everything in that file you could do by throwing commands in the terminal.
+
+
+Again, a lot is going on here. And though almost every line of code is commented let’s go over it even so.
+
+First, we create a new chain by doing:
+
+iptables -t nat -N REDSOCKS
+Later on, we need to ignore LAN and reserved IPs by doing:
+
+iptables -t nat -A REDSOCKS -d 0.0.0.0/8 -j RETURN                             iptables -t nat -A REDSOCKS -d 10.0.0.0/8 -j RETURN                             iptables -t nat -A REDSOCKS -d 100.64.0.0/10 -j RETURN                             iptables -t nat -A REDSOCKS -d 127.0.0.0/8 -j RETURN                             iptables -t nat -A REDSOCKS -d 169.254.0.0/16 -j RETURN                             iptables -t nat -A REDSOCKS -d 172.16.0.0/12 -j RETURN                             iptables -t nat -A REDSOCKS -d 192.168.0.0/16 -j RETURN                             iptables -t nat -A REDSOCKS -d 198.18.0.0/15 -j RETURN                             iptables -t nat -A REDSOCKS -d 224.0.0.0/4 -j RETURN                             iptables -t nat -A REDSOCKS -d 240.0.0.0/4 -j RETURN
+Now we need to redirect the rest of the traffic
+
+iptables -t nat -A REDSOCKS -p tcp --dport 80 -j REDIRECT --to-ports 12346                             
+iptables -t nat -A REDSOCKS -p tcp --dport 443 -j REDIRECT --to-ports 12345                             
+Am redirecting all HTTP traffic thru 12346 and all HTTPS traffic to 12345. The ports I opened with Redsocks.
+
+The next one is a little truculent.
+
+iptables -t nat -A REDSOCKS -p tcp -j REDIRECT --to-ports 12345
+This redirects everything that enters the REDSOCKS chain to the 12345 port.
+
+Finally.
+
+iptables -t nat -A OUTPUT -p tcp -j REDSOCKS
+Redirect every connection leaving your machine to the REDSOCKS chain to be handled there.
