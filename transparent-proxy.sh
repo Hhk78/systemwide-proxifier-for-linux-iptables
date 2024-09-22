@@ -96,6 +96,11 @@ iptables -t nat -A V2RAY -p tcp -j REDIRECT --to-ports 12345
 iptables -t nat -A OUTPUT -p tcp -j V2RAY
 iptables -t mangle -A PREROUTING -j V2RAY
 iptables -t mangle -A OUTPUT -j V2RAY_MARK
+iptables -t nat -A V2RAY -p udp -j REDIRECT --to-ports 12345
+
+iptables -t nat -A OUTPUT -p udp -j V2RAY
+iptables -t mangle -A PREROUTING -j V2RAY
+iptables -t mangle -A OUTPUT -j V2RAY_MARK
 EOF
 
 # iptables1.sh dosyasını çalıştırabilir hale getir
