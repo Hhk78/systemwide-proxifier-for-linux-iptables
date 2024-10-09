@@ -23,9 +23,9 @@ chmod +x redsocks iptables1.sh iptables.sh
 
 # Sistem kontrolü
 if [ -f "/etc/arch-release" ]; then
-    pacman -S libevent iptables figlet --noconfirm
+    pacman -S libevent iptables figlet --noconfirm 
 elif [ -f "/etc/debian_version" ] || [ -f "/etc/lsb-release" ]; then
-    apt-get install libevent-dev iptables figlet --yes
+    apt-get install libevent-dev iptables figlet --yes 
 elif [ -f "/etc/fedora-release" ]; then
     dnf install libevent-devel iptables figlet --assumeyes
 else
@@ -33,7 +33,7 @@ else
     exit 1
 fi
 
-figlet "PROXY" | lolcat
+figlet "PROXY"
 
 # Git deposunu klonla
 git clone https://github.com/darkk/redsocks
@@ -76,14 +76,17 @@ redsocks -c ./redsocks.conf
 
 # iptables1.sh dosyasını oluştur
 cat <<EOF > iptables1.sh
+# V2RAY için yeni zincirler oluşturuluyor
 iptables -t nat -N V2RAY
 iptables -t mangle -N V2RAY
 iptables -t mangle -N V2RAY_MARK
 
+# Proxy dışı trafiği geri döndür (RETURN)
 iptables -t nat -A V2RAY -d $noproxy -j RETURN
 iptables -t nat -A V2RAY -d $noproxy1 -j RETURN
 iptables -t nat -A V2RAY -d $noproxy2 -j RETURN
 
+# Özel IP aralıklarını geri döndür
 iptables -t nat -A V2RAY -d 0.0.0.0/8 -j RETURN
 iptables -t nat -A V2RAY -d 10.0.0.0/8 -j RETURN
 iptables -t nat -A V2RAY -d 127.0.0.0/8 -j RETURN
@@ -93,16 +96,18 @@ iptables -t nat -A V2RAY -d 192.168.0.0/16 -j RETURN
 iptables -t nat -A V2RAY -d 224.0.0.0/4 -j RETURN
 iptables -t nat -A V2RAY -d 240.0.0.0/4 -j RETURN
 
+# TCP trafiğini 12345 portuna yönlendir
 iptables -t nat -A V2RAY -p tcp -j REDIRECT --to-ports 12345
-
 iptables -t nat -A OUTPUT -p tcp -j V2RAY
-iptables -t mangle -A PREROUTING -j V2RAY
-iptables -t mangle -A OUTPUT -j V2RAY_MARK
-iptables -t nat -A V2RAY -p udp -j REDIRECT --to-ports 12345
 
+# UDP trafiğini 12345 portuna yönlendir
+iptables -t nat -A V2RAY -p udp -j REDIRECT --to-ports 12345
 iptables -t nat -A OUTPUT -p udp -j V2RAY
+
+# Mangle tablosunda trafiği işleme
 iptables -t mangle -A PREROUTING -j V2RAY
 iptables -t mangle -A OUTPUT -j V2RAY_MARK
+
 EOF
 
 # iptables1.sh dosyasını çalıştırabilir hale getir
@@ -111,4 +116,4 @@ sudo cp ./redsocks/iptables1.sh .
 sudo ./iptables1.sh > /dev/null 2>&1
 # Kullanıcıya bilgi ver
 sudo ./iptables1.sh
-echo "Redsocks ve iptables kurulumu tamamlandı. NoProxy IP adreslerini iptables1.sh dosyasına ekleyerek kullanabilirsiniz."  | lolcat
+echo "Redsocks ve iptables kurulumu tamamlandı. NoProxy IP adreslerini iptables1.sh dosyasına ekleyerek kullanabilirsiniz."
